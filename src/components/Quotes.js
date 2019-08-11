@@ -1,29 +1,55 @@
 import React from 'react';
+import { API_ORIGIN } from "../config";
 
-const quotes = [
-    {dlrQuote: "Rise and shine! Wake up and smell the rock star!"},
-    {dlrQuote: "If I eat a 3 musketeers bar, drink a RedBull, and a small can of Schlitz malt liquor and wait 4 minutes, I know there's a 22 minute window that there's nothing in the state park that I can't climb like I'm spiderman! Better living through chemistry!"},
-    {dlrQuote: "Roth, first thing in the morning. A bottomless cup of attitude and the 2nd one is free!"},
-  ];
-  
   class Quotes extends React.Component {
     
       constructor(props) {
       super(props);
       this.state = {
-        dlrQuote: ''
+        quote: ''
       }
         
       this.newQuote = this.newQuote.bind(this);
       
     }
+
+    getQuotes() {
+      this.setState({
+          error: null,
+          loading: true
+      });
+      fetch(`${API_ORIGIN}/quotes`)
+          .then(res => {
+              if (!res.ok) {
+                  return Promise.reject(res.statusText);
+              }
+              return res.json();
+          })
+          .then(quote =>
+              this.setState({
+                quote: quote,
+                loading: false
+              })
+          )
+          .catch(err =>
+              this.setState({
+                  error: 'Could not load quotes',
+                  loading: false
+              })
+          );
+    }
+    
+    componentWillMount() {
+      alert('yes');
+      this.getQuotes();
+    }
     
     newQuote() {
       let number = (Math.floor(Math.random() * quotes.length));
       
-      let quote = quotes[number].dlrQuote;
+      let quote = quotes[number].quote;
       
-      this.setState({dlrQuote: quote})
+      this.setState({quote: quote})
       
     }
     
@@ -34,8 +60,8 @@ const quotes = [
     render() {
       return (
         <div id="quote-box" className="center-div">
-          <Text quote={this.state.dlrQuote} />
-          <Buttons handleNewQuote={this.newQuote} quote={this.state.dlrQuote} />
+          <Text quote={this.state.quote} />
+          <Buttons handleNewQuote={this.newQuote} quote={this.state.quote} />
         </div>
       )
     }
