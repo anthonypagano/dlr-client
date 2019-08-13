@@ -1,1 +1,1 @@
-exports.API_ORIGIN = '';
+exports.API_ORIGIN = 'http://localhost:8080';
