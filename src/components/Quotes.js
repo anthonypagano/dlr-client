@@ -8,9 +8,11 @@ export class Quotes extends React.Component {
       this.state = {
         dlrQuotes: []
       }
+
+      this.getRandomQuote = this.getRandomQuote.bind(this);
     }
 
-    componentDidMount(){
+    getData() {
       fetch(`${API_ORIGIN}/quote`)
         .then(results => {
           return results.json();
@@ -24,9 +26,22 @@ export class Quotes extends React.Component {
             this.setState({
                 error: 'Could not load quotes'
             })
-        );
+        );      
     }
-        
+    getRandomQuote() {
+      let number = (Math.floor(Math.random() * 3));
+//      let number = Math.random();
+            console.log(number);
+            let dlrSays = dlrQuotes[number].quote;
+      console.log(dlrSays);
+    }
+
+    componentDidMount(){
+        this.getData();
+        this.getRandomQuote();
+      }
+
+    
     render() {
       const quoteList = this.state.dlrQuotes.map((quoteList, key) =>
       <li key={quoteList.id}>{quoteList.quote}</li>);
